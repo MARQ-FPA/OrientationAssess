@@ -1,0 +1,5 @@
+DEV = True
+
+ALLOWED_TENANTS = [
+    "7241719b-8269-429a-ba63-a3bc8dec8589",
+]
