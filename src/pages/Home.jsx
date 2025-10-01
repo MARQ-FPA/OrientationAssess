@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../connections/config';
+import EmpSelect from '../components/EmpSelect';
+
 const Home = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -205,13 +207,18 @@ const Home = () => {
             <label htmlFor="user" className="block text-lg font-semibold text-gray-800 dark:text-white mb-3">
               Name:
             </label>
-            <input
+            {/* <input
               type="text"
               id="user"
               value={user}
               onChange={(e) => setUser(e.target.value)}
               placeholder="FirstName LastName"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            /> */}
+            <EmpSelect
+              defaultValue={user}
+              onChange={(value) => setUser(value)}
+              viewOnly={false}
             />
           </div>
         </div>

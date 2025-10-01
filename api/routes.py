@@ -52,8 +52,37 @@ def get_db(database, scope="read"):
         )
 
 
-# This function authenticates the user
+@api_blueprint.route("input-data/employee-select", methods=["GET"])
+def employee_select():
+    try:
 
+        sql = """
+            select
+                E.Employee_XRefCode,
+                E.Employee_FirstName + ' ' + E.Employee_LastName as Employee_FullName,
+                E.Employee_LastName,
+                E.Employee_FirstName,
+                E.Job_XrefCode,
+                E.EmploymentStatus_ShortName,
+                E.Employee_HireDate
+            from
+                DAYFORCE.dbo.vw_Employee E
+            left join
+                WEB_TOOLS.dbo.Orientation_Evaluations OE ON OE.employee_evaluated = E.Employee_XRefCode
+            where
+                (E.PayGroup_XRefCode like 'RIVER_MV' and E.EmploymentStatus_ShortName like 'Pre%' and E.Job_XrefCode like '%Deck%')
+                or (E.PayGroup_XRefCode like 'RIVER_MV' and E.EmploymentStatus_ShortName like 'Active' and E.Employee_HireDate ='2040-01-01' and E.Job_XrefCode like '%Deck%')
+        """
+
+        db = get_db("DAYFORCE")
+
+        df = pd.read_sql(text(sql), db)
+
+        return jsonify({"success": True, "data": df.to_dict(orient="records")})
+    
+    except Exception as e:
+        return jsonify({"error": get_error(e)}), 500
+        
 
 def get_questions_list():
     questions_module = importlib.import_module('questions')
